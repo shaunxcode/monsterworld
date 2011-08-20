@@ -13,10 +13,10 @@ if (isset($_SERVER['ENVIRONMENT']) && $_SERVER['ENVIRONMENT'] == 'PAGODA') {
     define('DB_HOST', $_SERVER['DB_HOST']);
 }
 else {
-    define('DB_NAME', 'monsterworld');
-    define('DB_USER', 'monsterworld');
-    define('DB_PASSWORD', 'localpass');
-    define('DB_HOST', 'localhost');
+    define('DB_NAME', 'mellisa');
+    define('DB_USER', 'bernardina');
+    define('DB_PASSWORD', '62mTnygx');
+    define('DB_HOST', '127.0.0.1:3307');
 }
 
 return array(
