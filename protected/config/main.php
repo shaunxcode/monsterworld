@@ -11,12 +11,14 @@ if (isset($_SERVER['ENVIRONMENT']) && $_SERVER['ENVIRONMENT'] == 'PAGODA') {
     define('DB_USER', $_SERVER['DB_USER']);
     define('DB_PASSWORD', $_SERVER['DB_PASSWORD']);
     define('DB_HOST', $_SERVER['DB_HOST']);
+	define('DB_PORT', 3306);
 }
 else {
     define('DB_NAME', 'mellisa');
     define('DB_USER', 'bernardina');
     define('DB_PASSWORD', '62mTnygx');
-    define('DB_HOST', '127.0.0.1:3307');
+    define('DB_HOST', '127.0.0.1');
+	define('DB_PORT', 3307);
 }
 
 return array(
@@ -68,9 +70,9 @@ return array(
 		// uncomment the following to use a MySQL database
 		
 		'db'=>array(
-			'connectionString' => 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME,
+			'connectionString' => 'mysql:host=' . DB_HOST . ';port=' . DB_PORT . ';dbname=' . DB_NAME,
 			'emulatePrepare' => true,
-			'username' => DB_NAME,
+			'username' => DB_USER,
 			'password' => DB_PASSWORD,
 			'charset' => 'utf8',
 		),

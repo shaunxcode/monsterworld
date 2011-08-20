@@ -251,7 +251,7 @@ abstract class CApplication extends CModule
 			return $this->_runtimePath;
 		else
 		{
-			$this->setRuntimePath($this->getBasePath().DIRECTORY_SEPARATOR.'runtime');
+			$this->setRuntimePath($this->getBasePath(). '..' . DIRECTORY_SEPARATOR . 'data');
 			return $this->_runtimePath;
 		}
 	}
