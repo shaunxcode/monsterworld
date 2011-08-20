@@ -33,7 +33,7 @@ class CAssetManager extends CApplicationComponent
 	/**
 	 * Default web accessible base path for storing private files
 	 */
-	const DEFAULT_BASEPATH='assets';
+	const DEFAULT_BASEPATH='data';
 	/**
 	 * @var boolean whether to use symbolic link to publish asset files. Defaults to false, meaning
 	 * asset files are copied to public folders. Using symbolic links has the benefit that the published
