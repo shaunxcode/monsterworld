@@ -1,0 +1,35 @@
+2011/08/20 05:59:17 [error] [exception.CException] exception 'CException' with message 'CAssetManager.basePath "/Users/shaunxcode/Dropbox/code/monsterworld/data/assets" is invalid. Please make sure the directory exists and is writable by the Web server process.' in /Users/shaunxcode/Dropbox/code/monsterworld/yii/framework/web/CAssetManager.php:112
+Stack trace:
+#0 /Users/shaunxcode/Dropbox/code/monsterworld/yii/framework/web/CAssetManager.php(97): CAssetManager->setBasePath('/Users/shaunxco...')
+#1 /Users/shaunxcode/Dropbox/code/monsterworld/yii/framework/web/CAssetManager.php(207): CAssetManager->getBasePath()
+#2 /Users/shaunxcode/Dropbox/code/monsterworld/yii/framework/gii/GiiModule.php(137): CAssetManager->publish('/Users/shaunxco...')
+#3 /Users/shaunxcode/Dropbox/code/monsterworld/yii/framework/base/CComponent.php(112): GiiModule->getAssetsUrl()
+#4 /Users/shaunxcode/Dropbox/code/monsterworld/yii/framework/base/CModule.php(88): CComponent->__get('assetsUrl')
+#5 /Users/shaunxcode/Dropbox/code/monsterworld/yii/framework/gii/views/layouts/main.php(5): CModule->__get('assetsUrl')
+#6 /Users/shaunxcode/Dropbox/code/monsterworld/yii/framework/web/CBaseController.php(119): require('/Users/shaunxco...')
+#7 /Users/shaunxcode/Dropbox/code/monsterworld/yii/framework/web/CBaseController.php(88): CBaseController->renderInternal('/Users/shaunxco...', Array, true)
+#8 /Users/shaunxcode/Dropbox/code/monsterworld/yii/framework/web/widgets/CContentDecorator.php(78): CBaseController->renderFile('/Users/shaunxco...', Array, true)
+#9 /Users/shaunxcode/Dropbox/code/monsterworld/yii/framework/web/widgets/CContentDecorator.php(56): CContentDecorator->decorate('<div class="con...')
+#10 /Users/shaunxcode/Dropbox/code/monsterworld/yii/framework/web/widgets/COutputProcessor.php(45): CContentDecorator->processOutput('<div class="con...')
+#11 /Users/shaunxcode/Dropbox/code/monsterworld/yii/framework/web/CBaseController.php(199): COutputProcessor->run()
+#12 /Users/shaunxcode/Dropbox/code/monsterworld/yii/framework/web/CBaseController.php(294): CBaseController->endWidget('CContentDecorat...')
+#13 /Users/shaunxcode/Dropbox/code/monsterworld/yii/framework/gii/views/layouts/generator.php(25): CBaseController->endContent()
+#14 /Users/shaunxcode/Dropbox/code/monsterworld/yii/framework/web/CBaseController.php(119): require('/Users/shaunxco...')
+#15 /Users/shaunxcode/Dropbox/code/monsterworld/yii/framework/web/CBaseController.php(88): CBaseController->renderInternal('/Users/shaunxco...', Array, true)
+#16 /Users/shaunxcode/Dropbox/code/monsterworld/yii/framework/web/CController.php(781): CBaseController->renderFile('/Users/shaunxco...', Array, true)
+#17 /Users/shaunxcode/Dropbox/code/monsterworld/yii/framework/gii/CCodeGenerator.php(70): CController->render('index', Array)
+#18 /Users/shaunxcode/Dropbox/code/monsterworld/yii/framework/web/actions/CInlineAction.php(50): CCodeGenerator->actionIndex()
+#19 /Users/shaunxcode/Dropbox/code/monsterworld/yii/framework/web/CController.php(300): CInlineAction->runWithParams(Array)
+#20 /Users/shaunxcode/Dropbox/code/monsterworld/yii/framework/web/CController.php(278): CController->runAction(Object(CInlineAction))
+#21 /Users/shaunxcode/Dropbox/code/monsterworld/yii/framework/web/CController.php(257): CController->runActionWithFilters(Object(CInlineAction), Array)
+#22 /Users/shaunxcode/Dropbox/code/monsterworld/yii/framework/web/CWebApplication.php(277): CController->run('')
+#23 /Users/shaunxcode/Dropbox/code/monsterworld/yii/framework/web/CWebApplication.php(136): CWebApplication->runController('gii/model')
+#24 /Users/shaunxcode/Dropbox/code/monsterworld/yii/framework/base/CApplication.php(158): CWebApplication->processRequest()
+#25 /Users/shaunxcode/Dropbox/code/monsterworld/index.php(13): CApplication->run()
+#26 {main} REQUEST_URI=/index.php/gii/model
+2011/08/20 06:25:14 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "contact".' in /Users/shaunxcode/Dropbox/code/monsterworld/yii/framework/web/CWebApplication.php:281
+Stack trace:
+#0 /Users/shaunxcode/Dropbox/code/monsterworld/yii/framework/web/CWebApplication.php(136): CWebApplication->runController('contact')
+#1 /Users/shaunxcode/Dropbox/code/monsterworld/yii/framework/base/CApplication.php(158): CWebApplication->processRequest()
+#2 /Users/shaunxcode/Dropbox/code/monsterworld/index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/contact
