@@ -1,0 +1,62 @@
+
+<!DOCTYPE html> 
+<html lang="en"> 
+    <head> 
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+        <title>MonsterWorld LandMass Generator</title> 
+		<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/smoothness/jquery-ui.css" type="text/css" media="all" /> 
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.js"></script> 
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js"></script>
+
+        <script type="text/javascript" src="raphael-min.js"></script>
+		<style>
+			#canvas {
+				height: 480px;
+				margin: 0 auto;
+				text-align: left;
+				width: 640px;
+				border: 1px solid #ccc;
+	         }
+		</style>
+		<script type="text/javascript">
+			$(function(){
+				var randomInRange = function(from, to){
+		       		return Math.floor(Math.random() * (to - from + 1) + from);
+				};
+				
+				var generateLandMass = function(center, radius, segments) {
+					var points = [];
+					for(var i = 0; i < segments; i++) {
+						var deg = i * 2 * Math.PI / segments;
+						var randomRadius = randomInRange(radius.min, radius.max);
+						points.push({
+							x: center.x + randomRadius * Math.sin(deg), 
+							y: center.y + randomRadius * Math.cos(deg)
+						});
+					}
+					return points;
+				};
+			
+			 	var paper = Raphael("canvas", 640, 480);
+
+				var first = false;
+				var border = false;
+				$.each(generateLandMass({x:300, y: 300}, {min: 100, max: 200}, 50), function(i, point) {
+					paper.circle(point.x, point.y, 1);
+					if(!border) {
+						border = 'M' + point.x + ' ' + point.y;
+						first = point;
+					} else {
+						border += 'L' + point.x + ' ' + point.y;
+					}
+				});
+				paper.path(border + 'L' + first.x + ' ' + first.y);	
+				
+			})
+		</script>
+	</head>
+	<body>
+		<div id="canvas"></div>
+	</body>
+</html>
+
