@@ -10,6 +10,8 @@
 
         <script type="text/javascript" src="raphael-min.js"></script>
 		<style>
+			body { font-family: helvetica; }
+			
 			#canvas {
 				height: 480px;
 				margin: 0 auto;
@@ -25,7 +27,7 @@
 				margin-right: auto;
 			}
 			
-			.slider { margin-bottom: .5em; }
+			.slider { margin-bottom: .5em; margin-top: .2em;}
 		</style>
 		<script type="text/javascript">
 			$(function(){
@@ -38,9 +40,11 @@
 					for(var i = 0; i < segments; i++) {
 						var deg = i * 2 * Math.PI / segments;
 						var randomRadius = randomInRange(radius.min, radius.max);
+						var centerShift = {x: randomInRange(0, (radius.max - radius.min)), y: randomInRange(0, (radius.max - radius.min))};
+						paper.circle(center.x + centerShift.x, center.y + centerShift.y, 1);
 						points.push({
-							x: center.x + randomRadius * Math.sin(deg), 
-							y: center.y + randomRadius * Math.cos(deg)
+							x: (center.x + centerShift.x) + randomRadius * Math.sin(deg), 
+							y: (center.y + centerShift.y) + randomRadius * Math.cos(deg)
 						});
 					}
 					return points;
@@ -55,7 +59,7 @@
 					var segmentCountValue = segmentCount.slider('value');
 					$.each(
 						generateLandMass(
-							{x:300, y: 250}, 
+							{x:320, y: 240}, 
 							{min: radiusRangeValue[0], max: radiusRangeValue[1]}, 
 							segmentCountValue), 
 						function(i, point) {	
@@ -80,22 +84,35 @@
 				 
 				var segmentCount = $('#segmentSlider').slider({
 					range: 'min',
-					min: 10, 
-					max: 500,
+					min: 3, 
+					max: 1000,
 					value: 50
 				}); 
 				
-				$('#generateButton').button().click(render);
-				render();
+				var redrawSpeed = $('#speedSlider').slider({
+					range: 'min',
+					min: 1, 
+					value: 150,
+					max: 5000,
+					change: function(evt, ui) {
+						window.clearInterval(renderInterval);
+						renderInterval = window.setInterval(render, ui.value);
+					}
+				});
+				
+				var renderInterval = window.setInterval(render, 150);
 			})
 		</script>
 	</head>
 	<body>
 		<div id="canvas"></div>
 		<div id="controls">
+			radius range:
 			<div class="slider" id="radiusRange"></div>
+			segments:
 			<div class="slider" id="segmentSlider"></div>
-        	<button id="generateButton">generate</button>
+			redraw speed: 
+			<div class="slider" id="speedSlider"></div>
 		</div>
 	</body>
 </html>
