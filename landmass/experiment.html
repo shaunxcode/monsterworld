@@ -17,6 +17,15 @@
 				width: 640px;
 				border: 1px solid #ccc;
 	         }
+	
+			#controls {
+				margin-top: .5em;
+				width: 640px;
+				margin-left: auto;
+				margin-right: auto;
+			}
+			
+			.slider { margin-bottom: .5em; }
 		</style>
 		<script type="text/javascript">
 			$(function(){
@@ -38,25 +47,56 @@
 				};
 			
 			 	var paper = Raphael("canvas", 640, 480);
-
-				var first = false;
-				var border = false;
-				$.each(generateLandMass({x:300, y: 300}, {min: 100, max: 200}, 50), function(i, point) {
-					paper.circle(point.x, point.y, 1);
-					if(!border) {
-						border = 'M' + point.x + ' ' + point.y;
-						first = point;
-					} else {
-						border += 'L' + point.x + ' ' + point.y;
-					}
-				});
-				paper.path(border + 'L' + first.x + ' ' + first.y);	
+				var render = function() {
+					paper.clear();
+					var first = false;
+					var border = false;
+					var radiusRangeValue = radiusRange.slider('values');
+					var segmentCountValue = segmentCount.slider('value');
+					$.each(
+						generateLandMass(
+							{x:300, y: 250}, 
+							{min: radiusRangeValue[0], max: radiusRangeValue[1]}, 
+							segmentCountValue), 
+						function(i, point) {	
+							paper.circle(point.x, point.y, 1);
+							if(!border) {
+								border = 'M' + point.x + ' ' + point.y;
+								first = point;
+							} else {
+								border += 'L' + point.x + ' ' + point.y;
+							}
+						});
+						
+					paper.path(border + 'L' + first.x + ' ' + first.y);
+				};
 				
+				var radiusRange = $('#radiusRange').slider({
+					range: true, 
+					min: 0, 
+					max: 500,
+					values: [100, 200]
+				});
+				 
+				var segmentCount = $('#segmentSlider').slider({
+					range: 'min',
+					min: 10, 
+					max: 500,
+					value: 50
+				}); 
+				
+				$('#generateButton').button().click(render);
+				render();
 			})
 		</script>
 	</head>
 	<body>
 		<div id="canvas"></div>
+		<div id="controls">
+			<div class="slider" id="radiusRange"></div>
+			<div class="slider" id="segmentSlider"></div>
+        	<button id="generateButton">generate</button>
+		</div>
 	</body>
 </html>
 
