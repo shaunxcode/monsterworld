@@ -41,6 +41,8 @@
 				};
 				Point.id = 0;
 				
+				var R;
+				
 				var M = function(p1, p2) {
 					if(M.points[p1.id] && M.points[p1.id][p2.id]) {
 						return M.points[p1.id][p2.id];
@@ -60,8 +62,8 @@
 						M.points[p2.id] = {};
 					}
 					
-					newPoint.y = newPoint.y + randomInRange(-10, 10);
-					newPoint.x = newPoint.x + randomInRange(-10, 10);
+					newPoint.y = newPoint.y + randomInRange(-R, R);
+					newPoint.x = newPoint.x + randomInRange(-R, R);
 					M.points[p1.id][p2.id] = newPoint;
 					M.points[p2.id][p1.id] = newPoint;
 					
@@ -75,6 +77,8 @@
 				
 				var generateLandMass = function(recur) {
 					//initial population of grid with single cell 
+					R = 10;
+					
 					var grid = [
 						Cell(
 							Point(100, 100), 
@@ -115,6 +119,7 @@
 						generations.push(newGrid);
 						grid = newGrid;
 						recur--;
+						R = R-2;
 					}
 					
 					return generations;
