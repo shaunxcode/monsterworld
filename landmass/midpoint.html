@@ -9,8 +9,26 @@
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js"></script>
 
         <script type="text/javascript" src="raphael-min.js"></script>
+		<script type="text/javascript" src="md5.js"></script>
+		<script type="text/javascript" src="seedrandom.js"></script>
 		<style>
 			body { font-family: helvetica; }
+			
+			#seedControl { 
+				width: 640px; 
+				margin-left: auto; 
+				margin-right: auto;
+				margin-bottom: 1em; 
+			}
+			
+			#seed { 
+				margin-top: 10px;
+				display: inline-block;
+				font-size: 16px;
+				padding: 8px; 
+				border: 1px solid #ccc; 
+				width: 380px; 
+			}
 			
 			#canvas {
 				height: 480px;
@@ -81,10 +99,10 @@
 					
 					var grid = [
 						Cell(
-							Point(100, 100), 
-							Point(400, 100), 
-							Point(100, 400), 
-							Point(400, 400))];
+							Point(20, 20), 
+							Point(620, 20), 
+							Point(20, 460), 
+							Point(620, 460))];
 					
 					var generations = [];
 					
@@ -126,28 +144,51 @@
 				};
 			
 				var paper = Raphael("canvas", 640, 480);
-
-				$.each(generateLandMass(6), function(i, grid) {
-					$('#controls').append($('<span />').text('#' + i).click(function() {
-						paper.clear();
-						$.each(grid, function(c, cell) {
-							paper.path('M' + 
-								cell.a.x + ' ' + cell.a.y + 'L' + 
-								cell.b.x + ' ' + cell.b.y + 'L' + 
-								cell.d.x + ' ' + cell.d.y + 'L' + 
-								cell.c.x + ' ' + cell.c.y + 'L' + 
-								cell.a.x + ' ' + cell.a.y);
-						});
-					}));
+				var seed = $('#seed'); 
+				if(seed.val() == '') {
+					seed.val(calcMD5(Date()));
+				}
+				
+				var generate = function() {
+					$('#controls').html('');
+					Math.seedrandom(seed.val());				
+					$.each(generateLandMass(6), function(i, grid) {
+						$('#controls').append($('<span />').text('#' + i).click(function() {
+							paper.clear();
+							$.each(grid, function(c, cell) {
+								paper.path('M' + 
+									cell.a.x + ' ' + cell.a.y + 'L' + 
+									cell.b.x + ' ' + cell.b.y + 'L' + 
+									cell.d.x + ' ' + cell.d.y + 'L' + 
+									cell.c.x + ' ' + cell.c.y + 'L' + 
+									cell.a.x + ' ' + cell.a.y);
+							});
+						}));
+					});
+					
+					$('#controls span').last().prev().click();
+				};
+				
+				generate();
+				
+				$('#newSeed').button().click(function(){
+					$('#seed').val(calcMD5(Date()));
+					generate();
 				});
-			})
+				
+				$('#generate').button().click(generate);
+				
+			});
 		</script>
 	</head>
 	<body>
-		<div id="canvas"></div>
-		<div id="controls">
-		
+		<div id="seedControl">
+			<input type="text" id="seed" /> 
+			<button id="newSeed">Random</button>
+			<button id="generate">Generate</button>
 		</div>
+		<div id="canvas"></div>
+		<div id="controls"></div>
 	</body>
 </html>
 
