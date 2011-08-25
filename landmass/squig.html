@@ -1,0 +1,194 @@
+
+<!DOCTYPE html> 
+<html lang="en"> 
+    <head> 
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+        <title>MonsterWorld LandMass Generator</title> 
+		<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/smoothness/jquery-ui.css" type="text/css" media="all" /> 
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.js"></script> 
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js"></script>
+
+        <script type="text/javascript" src="raphael-min.js"></script>
+		<style>
+			body { font-family: helvetica; }
+			
+			#canvas {
+				height: 480px;
+				margin: 0 auto;
+				text-align: left;
+				width: 640px;
+				border: 1px solid #ccc;
+	         }
+	
+			#links {
+				margin-top: .5em;
+				width: 640px;
+				margin-left: auto;
+				margin-right: auto;
+			}
+			
+			.slider { margin-bottom: .5em; margin-top: .2em;}
+		</style>
+		<script type="text/javascript">
+			$(function(){
+				var randomInRange = function(from, to){
+		       		return Math.floor(Math.random() * (to - from + 1) + from);
+				};
+				
+				var generateSquig = function(type, recur) {
+					var grid = {};
+					var dirs = {
+						 n: [0 ,-1], 
+						ne: [1 ,-1],
+						 e: [1 , 0],
+						se: [1 , 1],
+						 s: [0 , 1], 
+						sw: [-1, 1], 
+						 w: [-1, 0],
+						nw: [-1,-1]
+					};
+					
+					var randomDir = function(except) {
+						except = except || {};
+						
+						var choices = [];
+						$.each(dirs, function(k, v) { 
+							if(!except[k]) {
+								choices.push(k);
+							}
+						});
+						
+						if(except.length == 0) {
+							return false;
+						}
+						
+						return choices[randomInRange(0, choices.length - 1)];
+					};
+					
+					var regions = [
+						[0, 0],
+						[0, 0]
+					]; 
+						
+					//notice we are "closing over" regions and changing its value when this is called
+					var subdivide = function() {
+						var newRegions = [];
+						$.each(regions, function(y, row) {
+							var newRow = [];
+							$.each(row, function(x, cell) {
+								if(cell == 0 || cell == null) {
+									newCell = null;
+								} else {
+									newCell = 0;
+								}
+								newRow.push(newCell, newCell);
+							})
+							newRegions.push(newRow, newRow);
+						})
+						regions = newRegions;
+					}
+					
+					var startDir = 'w';
+					var exitDir = 'e';
+					var startPos = [0, 0];
+					
+					var paths = [];
+					
+					var dir = false;
+					var pos = false;
+					for(var i = 0; i < recur; i ++) { 						
+						dir = startDir;
+						pos = startPos;
+						
+						//mark entrance 
+						regions[pos[0]][pos[1]] = 1; 
+						
+						var min = [0, 0];
+						var max = [regions.length-1, regions[0].length-1];
+
+						var cancel = 0;
+						var path = [pos];
+						while(true) { 	
+
+							var excludeDirs = {};
+							excludeDirs[dir] = true;
+							while(true) {
+								cancel++;
+								if(cancel > 100) { newDir = false; break; console.log('poop'); }
+
+
+								var newDir = randomDir(excludeDirs);
+								if(!newDir) {
+									break;
+								}
+								
+								var testPos = [pos[0] + dirs[newDir][0], pos[1] + dirs[newDir][1]];
+								
+								//only exit if we are leaving through opposite side 
+								if(newDir == exitDir && 
+									(testPos[0] > max[0] || 
+									 testPos[1] > max[1] || 
+									 testPos[0] < min[0] || 
+									 testPos[1] < min[1])) { 
+									console.log('ok break for ' + newDir + testPos.toSource());
+									newDir = false;
+									break;
+								}
+								
+								if(regions[testPos[0]] && regions[testPos[0]][testPos[1]] == 0) {
+									dir = newDir;
+									pos = testPos;
+									regions[pos[0]][pos[1]] = 1;
+									path.push(pos);
+									console.log('break but with good news going ' + dir);
+									break;
+								} else {
+									excludeDirs[newDir] = true;
+								}
+							}
+							
+							if(!newDir) {
+								break;
+							}
+						}
+
+
+						console.log(path.toSource());
+						subdivide();
+						paths.push(path);
+					}
+					return paths;
+				};
+			
+				var paths = generateSquig('square', 20);
+				$.each(paths, function(i, path) {
+					$('#links').css('cursor', 'pointer').append($('<span />').text('#' + i + ' ').click(function(){
+						render(path);
+					}))
+				})
+				
+			 	var paper = Raphael("canvas", 640, 480);
+				var render = function(path) {
+					paper.clear();
+					var size = 15;
+					
+					var poly = [];
+					$.each(path, function(i, seg) { 
+						poly.push((seg[0] * size) + ' ' + seg[1] * size);
+					});
+					
+					paper.path('M' + poly.join('L'));
+					
+				};
+				
+				
+			//	var renderInterval = window.setInterval(render, 150);
+			})
+		</script>
+	</head>
+	<body>
+		<div id="canvas"></div>
+		<div id="links"></div>
+	</body>
+</html>
+

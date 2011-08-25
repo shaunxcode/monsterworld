@@ -75,6 +75,7 @@ function love.load()
 	grid[0][20][2] = 1
 	grid[1][19][1] = 1
 	grid[2][18][1] = 1
+    grid[2][19][2] = 1
 	updateTileSetBatch()
 	
 	modal_message("Welcome to Summer Galaxies")
@@ -121,7 +122,7 @@ end
 
 function draw_hud()
 	love.graphics.print(love.mouse.getX() .. " | " .. love.mouse.getY(), 100, 100)
-	love.graphics.circle("fill", love.mouse.getX(), love.mouse.getY(), 5)
+	love.graphics.circle("fill", love.mouse.getX(), love.mouse.getY(), 50)
 	ocean:draw()
 	
 end

@@ -1,0 +1,148 @@
+
+<!DOCTYPE html> 
+<html lang="en"> 
+    <head> 
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+        <title>MonsterWorld LandMass Generator</title> 
+		<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/smoothness/jquery-ui.css" type="text/css" media="all" /> 
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.js"></script> 
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js"></script>
+
+        <script type="text/javascript" src="raphael-min.js"></script>
+		<style>
+			body { font-family: helvetica; }
+			
+			#canvas {
+				height: 480px;
+				margin: 0 auto;
+				text-align: left;
+				width: 640px;
+				border: 1px solid #ccc;
+	         }
+	
+			#controls {
+				margin-top: .5em;
+				width: 640px;
+				margin-left: auto;
+				margin-right: auto;
+			}
+			
+			#controls span { cursor: pointer; margin-right: 5px; }
+			.slider { margin-bottom: .5em; margin-top: .2em;}
+		</style>
+		<script type="text/javascript">
+			$(function(){
+				var randomInRange = function(from, to){
+		       		return Math.floor(Math.random() * (to - from + 1) + from);
+				};
+				
+				var Point = function(x, y) {
+					return {id: Point.id++, x: x, y: y};
+				};
+				Point.id = 0;
+				
+				var M = function(p1, p2) {
+					if(M.points[p1.id] && M.points[p1.id][p2.id]) {
+						return M.points[p1.id][p2.id];
+					}
+					if(M.points[p2.id] && M.points[p2.id][p1.id]) {
+						return M.points[p2.id][p1.id];
+					}
+					
+					var newPoint = Point(
+						p1.x + (p2.x > p1.x ? p2.x - p1.x : p1.x - p2.x) / 2, 
+						p1.y + (p2.y > p1.y ? p2.y - p1.y : p1.y - p2.y) / 2);
+						
+					if(!M.points[p1.id]) {
+						M.points[p1.id] = {};
+					}
+					if(!M.points[p2.id]) {
+						M.points[p2.id] = {};
+					}
+					
+					newPoint.y = newPoint.y + randomInRange(-10, 10);
+					newPoint.x = newPoint.x + randomInRange(-10, 10);
+					M.points[p1.id][p2.id] = newPoint;
+					M.points[p2.id][p1.id] = newPoint;
+					
+					return newPoint;
+				};
+				M.points = {};
+				
+				var Cell = function(a, b, c, d) {
+					return {a: a, b: b, c: c, d: d};
+				};
+				
+				var generateLandMass = function(recur) {
+					//initial population of grid with single cell 
+					var grid = [
+						Cell(
+							Point(100, 100), 
+							Point(400, 100), 
+							Point(100, 400), 
+							Point(400, 400))];
+					
+					var generations = [];
+					
+					generations.push(grid);
+					
+					while(recur) {
+						var newGrid = [];
+						$.each(grid, function(i, cell) {
+							newGrid.push(
+								Cell(
+									cell.a, 
+									M(cell.a, cell.b),  
+									M(cell.a, cell.c),
+									M(M(cell.a, cell.c), M(cell.b, cell.d))),
+								Cell(
+									M(cell.a, cell.b), 
+									cell.b, 
+									M(M(cell.a, cell.c), M(cell.b, cell.d)),
+									M(cell.b, cell.d)),
+								Cell(
+									M(cell.a, cell.c),
+									M(M(cell.a, cell.c), M(cell.b, cell.d)),
+									cell.c, 
+									M(cell.c, cell.d)),
+								Cell(
+									M(M(cell.a, cell.c), M(cell.b, cell.d)), 
+									M(cell.b, cell.d), 
+									M(cell.c, cell.d),
+									cell.d))
+						});
+						
+						generations.push(newGrid);
+						grid = newGrid;
+						recur--;
+					}
+					
+					return generations;
+				};
+			
+				var paper = Raphael("canvas", 640, 480);
+
+				$.each(generateLandMass(6), function(i, grid) {
+					$('#controls').append($('<span />').text('#' + i).click(function() {
+						paper.clear();
+						$.each(grid, function(c, cell) {
+							paper.path('M' + 
+								cell.a.x + ' ' + cell.a.y + 'L' + 
+								cell.b.x + ' ' + cell.b.y + 'L' + 
+								cell.d.x + ' ' + cell.d.y + 'L' + 
+								cell.c.x + ' ' + cell.c.y + 'L' + 
+								cell.a.x + ' ' + cell.a.y);
+						});
+					}));
+				});
+			})
+		</script>
+	</head>
+	<body>
+		<div id="canvas"></div>
+		<div id="controls">
+		
+		</div>
+	</body>
+</html>
+
